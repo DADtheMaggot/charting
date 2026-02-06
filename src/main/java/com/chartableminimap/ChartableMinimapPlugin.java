@@ -13,6 +13,7 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
+import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.ImageUtil;
 
 import java.awt.image.BufferedImage;
@@ -43,6 +44,11 @@ public class ChartableMinimapPlugin extends Plugin {
 	@Inject
 	private ClientToolbar clientToolbar;
 
+	@Inject
+	private OverlayManager overlayManager;
+
+	@Inject
+	private MinimapMaskOverlay minimapMaskOverlay;
 
 	private NavigationButton navigationButton;
 
@@ -75,6 +81,10 @@ public class ChartableMinimapPlugin extends Plugin {
 
 		log.debug("CM Navigation Button added to toolbar");
 
+		// Register the minimap mask overlay
+		overlayManager.add(minimapMaskOverlay);
+
+		log.debug("CM Minimap Mask Overlay added");
 
 		System.out.println("Chartable Minimap has started!");
 		log.debug("Chartable Minimap started!");
@@ -83,6 +93,9 @@ public class ChartableMinimapPlugin extends Plugin {
 	@Override
 	protected void shutDown() throws Exception
 	{
+		// Unregister the minimap mask overlay
+		overlayManager.remove(minimapMaskOverlay);
+		
 		clientToolbar.removeNavigation(navigationButton);
 
 		System.out.println("Chartable Minimap has stopped :/");
